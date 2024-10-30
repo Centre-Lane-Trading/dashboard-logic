@@ -5,9 +5,9 @@ from datetime import datetime
 
 class Leaderboard():
     def __init__(self):
-        self.original = pl.read_json("/home/abrahame/Desktop/leaderboard_example.json")
-        self.window = pl.read_json("/home/abrahame/Desktop/leaderboard_example.json")
-        self.exclusions_df = pl.read_json("/home/abrahame/Desktop/leaderboard_example.json")
+        self.original = pl.read_json("leaderboard_example.json")
+        self.window = pl.read_json("leaderboard_example.json")
+        self.exclusions_df = pl.read_json("leaderboard_example.json")
 
         self.metric = "PnL"
         self.area_only = False
