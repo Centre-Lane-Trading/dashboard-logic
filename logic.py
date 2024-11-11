@@ -11,6 +11,9 @@ class Leaderboard():
 
         self.metric = "PnL"
         self.area_only = False
+        self.grouping = True
+        self.topn = None # group all nodes
+
         self.window_start = datetime(2022, 9, 16)
         self.window_end = datetime(2024, 10, 15)
 
@@ -31,7 +34,14 @@ class Leaderboard():
         """
         df = self.which_df()
 
-        summary = df.group_by("policy").agg(pl.col("*").sum())\
+        if self.grouping and self.topn is not None:
+            # TODO: maybe we want to save these for the user to know which are
+            #       the nodes included in the top for each policy
+            topn = self.filter_topn()
+            df = df.join(topn, on=["policy", "node"], how="inner") # always on policy AND node
+
+        grouping_feats = self.which_grouping()
+        summary = df.group_by(grouping_feats).agg(pl.col("*").sum())\
             .with_columns(
                 (pl.col("profit_total")/pl.col("mwh_total")).alias("per MWh"),
                 (pl.col("win_count_long")+pl.col("win_count_short")).alias("win_count"),
@@ -40,7 +50,7 @@ class Leaderboard():
                 (100*pl.col("win_count")/pl.col("mwh_total")).alias("win %")
             )\
             .select(
-                "policy",
+                *grouping_feats, # all the grouping variables should display
                 pl.col("profit_total").alias("PnL"),
                 "per MWh",
                 "win %"
@@ -48,6 +58,39 @@ class Leaderboard():
             .sort(by=self.metric, descending=True)
 
         return summary
+
+    def which_grouping(self):
+        # keep policies separate always; node separation is optional (user input)
+        grouping = ["policy"]
+        if self.grouping == False:
+            grouping.append("node")
+
+        return grouping
+
+    def filter_topn(self):
+        df = self.which_df()
+
+        grouping_feats = ["policy", "node"] # the topn filter is always on policy AND node
+        topn = df.group_by(grouping_feats).agg(pl.col("*").sum())\
+            .with_columns(
+                (pl.col("profit_total")/pl.col("mwh_total")).alias("per MWh"),
+                (pl.col("win_count_long")+pl.col("win_count_short")).alias("win_count"),
+            )\
+            .with_columns(
+                (100*pl.col("win_count")/pl.col("mwh_total")).alias("win %")
+            )\
+            .select(
+                *grouping_feats,
+                pl.col("profit_total").alias("PnL"),
+                "per MWh",
+                "win %"
+            )\
+            .sort(by=self.metric, descending=True)\
+            .group_by("policy")\
+            .head(self.topn)\
+            .select(["policy", "node"]) # unclear whether this should always equal grouping
+
+        return topn
 
     def exclude_region(self, start_date, end_date):
         """
@@ -88,6 +131,26 @@ class Leaderboard():
         Event: button, on click
         """
         self.area_only = not self.area_only
+
+    def group(self):
+        """
+        Toggles the grouping value from False to True and viceversa
+
+        Event: button, on click
+        """
+        self.grouping = not self.grouping
+
+    def set_topn(self, n):
+        """
+        Overwrites the topn value
+
+        When "grouping" is set to False, this has no effect.
+        When "grouping" is set to True, the entries are grouped by [policy, node],
+        then only the top N highest should be used for the leaderboard.
+
+        Event: button, on click (should be disabled if grouping is False)
+        """
+        self.topn = n
 
     def set_metric(self, new_metric):
         """
