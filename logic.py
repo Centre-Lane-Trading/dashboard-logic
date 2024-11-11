@@ -144,10 +144,6 @@ class Leaderboard():
         """
         Overwrites the topn value
 
-        When "grouping" is set to False, this has no effect.
-        When "grouping" is set to True, the entries are grouped by [policy, node],
-        then only the top N highest should be used for the leaderboard.
-
         Event: button, on click (should be disabled if grouping is False)
         """
         self.topn = n
