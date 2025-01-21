@@ -4,18 +4,19 @@ from datetime import datetime
 
 
 class Leaderboard():
-    def __init__(self):
-        self.original = pl.read_json("leaderboard_example.json")
-        self.window = pl.read_json("leaderboard_example.json")
-        self.exclusions_df = pl.read_json("leaderboard_example.json")
+    def load_csv(self, csv_fpath):
+        self.original = pl.read_csv(csv_fpath)
+        self.window = pl.read_csv(csv_fpath)
+        self.exclusions_df = pl.read_csv(csv_fpath)
 
         self.metric = "PnL"
         self.area_only = False
         self.grouping = True
         self.topn = None # group all nodes
 
-        self.window_start = datetime(2022, 9, 16)
-        self.window_end = datetime(2024, 10, 15)
+        # TODO: obtain these values from the dataset; dynamically
+        self.window_start = datetime(2024, 12, 1)
+        self.window_end = datetime(2025, 1, 13)
 
     def which_df(self):
         """

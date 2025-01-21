@@ -34,6 +34,7 @@ python
 * **TODO:** display the summary
 ```
 board = logic.Leaderboard()
+board.load_csv("/home/abrahame/Downloads/miso_virts_og_study.csv")
 board.summarize() # this needs to be displayed, along with the graph
 ```
 
