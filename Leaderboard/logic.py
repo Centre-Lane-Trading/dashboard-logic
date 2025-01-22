@@ -35,9 +35,7 @@ class Leaderboard():
         """
         df = self.which_df()
 
-        if self.grouping and self.topn is not None:
-            # TODO: maybe we want to save these for the user to know which are
-            #       the nodes included in the top for each policy
+        if self.topn is not None:
             topn = self.filter_topn()
             df = df.join(topn, on=["policy", "node"], how="inner") # always on policy AND node
 
