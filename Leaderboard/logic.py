@@ -6,8 +6,16 @@ from datetime import datetime
 class Leaderboard():
     def load_csv(self, csv_fpath):
         self.original = pl.read_csv(csv_fpath)
+        self.original = self.original.with_columns(
+            pl.col("date").str.to_date("%Y-%m-%d"))
+
         self.window = pl.read_csv(csv_fpath)
+        self.window = self.window.with_columns(
+            pl.col("date").str.to_date("%Y-%m-%d"))
+
         self.exclusions_df = pl.read_csv(csv_fpath)
+        self.exclusions_df = self.exclusions_df.with_columns(
+            pl.col("date").str.to_date("%Y-%m-%d"))
 
         self.metric = "PnL"
         self.area_only = False
