@@ -22,7 +22,7 @@ You can easily find out which dates are missing by comparing the "date" values i
 # (assuming you have the prerequisites installed, and you are in the code folder)
 python
 
->>> import logic
+>>> from Leaderboard import Leaderboard
 >>> from datetime import date # we will need this to hardcode the example values
 ```
 
@@ -33,7 +33,7 @@ python
 * **TODO:** display the graph of cumulative profit
 * **TODO:** display the summary
 ```
-board = logic.Leaderboard()
+board = Leaderboard()
 board.load_csv("/home/abrahame/Downloads/miso_virts_og_study.csv")
 board.summarize() # this needs to be displayed, along with the graph
 ```
