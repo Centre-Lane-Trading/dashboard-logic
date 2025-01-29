@@ -9,16 +9,8 @@ class Leaderboard():
         res = StringIO(response_content)
 
         self.original = pl.read_json(res)
-        self.original = self.original.with_columns(
-            pl.col("date").str.to_date("%Y-%m-%d"))
-
         self.window = pl.read_json(res)
-        self.window = self.window.with_columns(
-            pl.col("date").str.to_date("%Y-%m-%d"))
-
         self.exclusions_df = pl.read_json(res)
-        self.exclusions_df = self.exclusions_df.with_columns(
-            pl.col("date").str.to_date("%Y-%m-%d"))
 
         self.metric = "PnL"
         self.area_only = False
