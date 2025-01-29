@@ -18,8 +18,8 @@ class Leaderboard():
         self.topn = None # group all nodes
 
         # TODO: obtain these values from the dataset; dynamically
-        self.window_start = board.original.select("date").min().item()
-        self.window_end = board.original.select("date").max().item()
+        self.window_start = self.original.select("date").min().item()
+        self.window_end = self.original.select("date").max().item()
 
     def which_df(self):
         """
