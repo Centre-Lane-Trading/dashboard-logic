@@ -4,16 +4,19 @@ from datetime import datetime
 
 
 class Leaderboard():
-    def load_csv(self, csv_fpath):
-        self.original = pl.read_csv(csv_fpath)
+    def load_response(self, response_content):
+        from io import StringIO
+        res = StringIO(reponse_content)
+
+        self.original = pl.read_json(res)
         self.original = self.original.with_columns(
             pl.col("date").str.to_date("%Y-%m-%d"))
 
-        self.window = pl.read_csv(csv_fpath)
+        self.window = pl.read_json(res)
         self.window = self.window.with_columns(
             pl.col("date").str.to_date("%Y-%m-%d"))
 
-        self.exclusions_df = pl.read_csv(csv_fpath)
+        self.exclusions_df = pl.read_json(res)
         self.exclusions_df = self.exclusions_df.with_columns(
             pl.col("date").str.to_date("%Y-%m-%d"))
 
@@ -23,8 +26,8 @@ class Leaderboard():
         self.topn = None # group all nodes
 
         # TODO: obtain these values from the dataset; dynamically
-        self.window_start = datetime(2024, 12, 1)
-        self.window_end = datetime(2025, 1, 13)
+        self.window_start = board.original.select("date").min().item()
+        self.window_end = board.original.select("date").max().item()
 
     def which_df(self):
         """
