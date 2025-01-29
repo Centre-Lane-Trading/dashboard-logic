@@ -6,7 +6,7 @@ from datetime import datetime
 class Leaderboard():
     def load_response(self, response_content):
         from io import StringIO
-        res = StringIO(reponse_content)
+        res = StringIO(response_content)
 
         self.original = pl.read_json(res)
         self.original = self.original.with_columns(
