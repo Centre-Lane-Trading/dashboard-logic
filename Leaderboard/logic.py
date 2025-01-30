@@ -51,15 +51,17 @@ class Leaderboard():
         """
         df = self.which_df()
         if df is None:
-            return pl.DataFrame(
-                data: None, 
+            empty = pl.DataFrame(
+                data=None, 
                 schema={
                     "policy": pl.String,
                     "node": pl.String,
                     "PnL": pl.Float32,
                     "per MWh": pl.Float32,
-                    "win %": pl.Float32,
-                }),
+                    "win %": pl.Float32
+                })
+
+            return empty
 
         if self.topn is not None:
             topn = self.filter_topn()
