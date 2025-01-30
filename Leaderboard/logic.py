@@ -4,6 +4,19 @@ from datetime import datetime
 
 
 class Leaderboard():
+    def __init__(self):
+        self.original = None
+        self.window = None
+        self.exclusions_df = None
+
+        self.metric = None
+        self.area_only = None
+        self.grouping = None
+        self.topn = None # group all nodes
+
+        self.window_start = None
+        self.window_end = None
+
     def load_response(self, response_content):
         from io import StringIO
         res = StringIO(response_content)
@@ -37,6 +50,16 @@ class Leaderboard():
         Produces a summary leaderboard of the dataframe in focus
         """
         df = self.which_df()
+        if df is None:
+            return pl.DataFrame(
+                data: None, 
+                schema={
+                    "policy": pl.String,
+                    "node": pl.String,
+                    "PnL": pl.Float32,
+                    "per MWh": pl.Float32,
+                    "win %": pl.Float32,
+                }),
 
         if self.topn is not None:
             topn = self.filter_topn()
