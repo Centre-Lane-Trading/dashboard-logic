@@ -76,12 +76,13 @@ class Leaderboard():
                 (pl.col("loss_count_long")+pl.col("loss_count_short")).alias("loss_count"),
             )\
             .with_columns(
-                (100*pl.col("win_count")/(pl.col("win_count") + pl.col("loss_count"))).alias("win %")
+                (100*pl.col("win_count")/(pl.col("win_count") + pl.col("loss_count"))).alias("win %"),
+                (pl.col("win_count") + pl.col("loss_count")).alias("MWh Total"),
             )\
             .select(
                 *grouping_feats, # all the grouping variables should display
                 pl.col("profit_total").alias("PnL"),
-                pl.col("mwh_total").alias("MWh Total"),
+                "MWh Total",
                 "per MWh",
                 "win %"
             )\
