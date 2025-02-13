@@ -57,6 +57,7 @@ class Leaderboard():
                     "policy": pl.String,
                     "node": pl.String,
                     "PnL": pl.Float32,
+                    "MWh Total": pl. Float32,
                     "per MWh": pl.Float32,
                     "win %": pl.Float32
                 })
@@ -80,6 +81,7 @@ class Leaderboard():
             .select(
                 *grouping_feats, # all the grouping variables should display
                 pl.col("profit_total").alias("PnL"),
+                pl.col("mwh_total").alias("MWh Total"),
                 "per MWh",
                 "win %"
             )\
