@@ -77,6 +77,7 @@ class Leaderboard():
             .with_columns(
                 (100*pl.col("win_count")/(pl.col("win_count") + pl.col("loss_count"))).alias("win %"),
                 (pl.col("win_count") + pl.col("loss_count")).alias("MWh Total"),
+                (pl.col("win_count")/pl.col("loss_count")).alias("w/l ratio"),
             )\
             .with_columns(
                 (pl.col("profit_total")/pl.col("MWh Total")).alias("per MWh"),
@@ -86,6 +87,9 @@ class Leaderboard():
                 pl.col("profit_total").alias("PnL"),
                 "MWh Total",
                 "per MWh",
+                "w/l ratio",
+                pl.col("win_count").alias("# wins"),
+                pl.col("loss_count").alias("# losses"),
                 "win %"
             )\
             .sort(by=self.metric, descending=True)
