@@ -71,13 +71,15 @@ class Leaderboard():
         grouping_feats = self.which_grouping()
         summary = df.group_by(grouping_feats).agg(pl.col("*").sum())\
             .with_columns(
-                (pl.col("profit_total")/pl.col("mwh_total")).alias("per MWh"),
                 (pl.col("win_count_long")+pl.col("win_count_short")).alias("win_count"),
                 (pl.col("loss_count_long")+pl.col("loss_count_short")).alias("loss_count"),
             )\
             .with_columns(
                 (100*pl.col("win_count")/(pl.col("win_count") + pl.col("loss_count"))).alias("win %"),
                 (pl.col("win_count") + pl.col("loss_count")).alias("MWh Total"),
+            )\
+            .with_columns(
+                (pl.col("profit_total")/pl.col("MWh Total")).alias("per MWh"),
             )\
             .select(
                 *grouping_feats, # all the grouping variables should display
